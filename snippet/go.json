@@ -1,0 +1,30 @@
+{
+	"checkErr": {
+		"prefix": "ie",
+ 	 	"body":[
+			"if err != nil {",
+			"\treturn err"
+			"}",
+		],
+		"description": "check error and return err"
+	},
+	"deferLog":{
+		"prefix":"delog",
+		"body":[
+			"\treply = ${1}",
+			"\t\r",
+                        "\t// 捕获各个task中的异常并返回给调用者",
+	                "\tdefer func() {",
+		        "\t\tif r := recover(); r != nil {",
+				"\t\t\terr = fmt.Errorf(\"%+v\", r)",
+			 	"\t\t\te := &status.Status{}",
+			 	"\t\t\tif er :=json.Unmarshal([]byte(err.Error()), e); er != nil {",
+				"\t\t\t\tlogger.Error(\"err\",",
+					"\t\t\t\tzap.String(\"system_err\", err.Error()),",
+					"\t\t\t\tzap.Stack(\"stacktrace\"))",
+		        	"\t\t\t}",
+		        "\t\t}",
+	                "\t}()",
+		]
+	}
+}
